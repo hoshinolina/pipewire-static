@@ -13,7 +13,7 @@
 #include "connection.h"
 
 #define NAME "protocol-native"
-PW_LOG_TOPIC(mod_topic, "mod." NAME);
+PW_LOG_TOPIC(mod_topic_native, "mod." NAME);
 PW_LOG_TOPIC(mod_topic_connection, "conn." NAME);
 
 static void test_create(struct pw_protocol_native_connection *conn)
@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
 
 	pw_init(&argc, &argv);
 
-	PW_LOG_TOPIC_INIT(mod_topic);
+	PW_LOG_TOPIC_INIT(mod_topic_native);
 	PW_LOG_TOPIC_INIT(mod_topic_connection);
 
 	loop = pw_main_loop_new(NULL);

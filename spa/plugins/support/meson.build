@@ -16,14 +16,19 @@ endif
 
 stdthreads_lib = cc.find_library('stdthreads', required: false)
 
-spa_support_lib = shared_library('spa-support',
+spa_support_lib = library('spa-support',
   spa_support_sources,
   c_args : [ simd_cargs ],
+  c_static_args: [ '-DSPA_STATIC_PLUGIN="support/libspa-support"' ],
   include_directories : [ configinc ],
   dependencies : [ spa_dep, pthread_lib, epoll_shim_dep, mathlib, stdthreads_lib ],
   install : true,
   install_dir : spa_plugindir / 'support')
 spa_support_dep = declare_dependency(link_with: spa_support_lib)
+
+if static
+  static_plugins += [spa_support_lib]
+endif
 
 if get_option('evl').allowed()
   evl_inc = include_directories('/usr/include')

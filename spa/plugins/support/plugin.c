@@ -48,3 +48,5 @@ int spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t 
 	(*index)++;
 	return 1;
 }
+
+SPA_REGISTER_PLUGIN();

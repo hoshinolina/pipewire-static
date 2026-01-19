@@ -103,13 +103,26 @@ if host_machine.system() != 'freebsd' and host_machine.system() != 'midnightbsd'
   ]
 endif
 
-libpipewire = shared_library(pipewire_name, pipewire_sources,
+if static
+  libpipewire_c_args += [
+    '-DNO_DLOPEN'
+  ]
+endif
+
+if static
+libpipewire_name = 'pipewire-static-@0@'.format(apiversion)
+else
+libpipewire_name = pipewire_name
+endif
+
+libpipewire = library(libpipewire_name, pipewire_sources,
   version : libversion,
   soversion : soversion,
   c_args : libpipewire_c_args,
   include_directories : [pipewire_inc, configinc, includes_inc],
   install : true,
-  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, ],
+  link_whole : static_plugins,
+  dependencies : [spa_dep, dl_lib, mathlib, pthread_lib, libintl_dep, atomic_dep, ] ,
 )
 
 pipewire_dep = declare_dependency(link_with : libpipewire,
@@ -120,6 +133,25 @@ pipewire_dep = declare_dependency(link_with : libpipewire,
     'confdatadir' : meson.current_build_dir() / '..' / 'daemon',
   }
 )
+
+if static
+
+pkgconfig.generate(libpipewire,
+  filebase : 'libpipewire-static-@0@'.format(apiversion),
+  requires : ['lib@0@'.format(spa_name)],
+  name : 'libpipewire-static',
+  subdirs : pipewire_name,
+  description : 'PipeWire Interface',
+  version : pipewire_version,
+  extra_cflags : '-D_REENTRANT',
+  variables : ['moduledir=${libdir}/pipewire-static-@0@'.format(apiversion)],
+  uninstalled_variables : [
+    'moduledir=${prefix}/src/modules',
+    'confdatadir=${prefix}/src/daemon',
+  ],
+)
+
+else
 
 pkgconfig.generate(libpipewire,
   filebase : 'lib@0@'.format(pipewire_name),
@@ -135,6 +167,8 @@ pkgconfig.generate(libpipewire,
     'confdatadir=${prefix}/src/daemon',
   ],
 )
+
+endif
 
 meson.override_dependency('lib@0@'.format(pipewire_name), pipewire_dep)
 

@@ -95,6 +95,27 @@ void pw_impl_module_schedule_destroy(struct pw_impl_module *module);
  * \}
  */
 
+
+struct pw_static_module {
+	const char *name;
+	pw_impl_module_init_func_t module_init;
+};
+
+#ifdef PW_STATIC_MODULE
+#undef SPA_EXPORT
+#define SPA_EXPORT static
+#define PW_REGISTER_MODULE() \
+        __attribute__((used)) __attribute__((retain)) \
+        __attribute__((section("pw_modules"))) __attribute__((aligned(__alignof__(struct spa_log_topic *)))) \
+        static struct pw_static_module pw_static_module = { \
+		PW_STATIC_MODULE, \
+		pipewire__module_init \
+	};
+
+#else
+#define PW_REGISTER_MODULE()
+#endif
+
 #ifdef __cplusplus
 }
 #endif

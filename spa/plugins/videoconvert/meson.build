@@ -17,10 +17,15 @@ if avcodec_dep.found() and avutil_dep.found() and swscale_dep.found()
   extra_dependencies += videoconvert_ffmpeg
 endif
 
-videoconvertlib = shared_library('spa-videoconvert',
+videoconvertlib = library('spa-videoconvert',
   videoconvert_sources,
   c_args : extra_cargs,
+  c_static_args: [ '-DSPA_STATIC_PLUGIN="videoconvert/libspa-videoconvert"' ],
   dependencies : [ spa_dep, mathlib ],
   link_with : extra_dependencies,
   install : true,
   install_dir : spa_plugindir / 'videoconvert')
+
+if static
+  static_plugins += [videoconvertlib]
+endif

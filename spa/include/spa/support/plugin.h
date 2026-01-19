@@ -223,7 +223,9 @@ typedef int (*spa_handle_factory_enum_func_t) (const struct spa_handle_factory *
  *	   0 when no more items are available
  *	   < 0 errno type error
  */
+#ifndef SPA_STATIC_PLUGIN
 int spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t *index);
+#endif
 
 
 
@@ -239,6 +241,27 @@ int spa_handle_factory_enum(const struct spa_handle_factory **factory, uint32_t 
 /**
  * \}
  */
+
+struct spa_static_plugin {
+	const char *name;
+	spa_handle_factory_enum_func_t handle_factory_enum;
+};
+
+#ifdef SPA_STATIC_PLUGIN
+#undef SPA_EXPORT
+#define SPA_EXPORT static
+#define SPA_REGISTER_PLUGIN() \
+        __attribute__((used)) __attribute__((retain)) \
+        __attribute__((section("spa_plugins"))) \
+	__attribute__((aligned(__alignof__(struct spa_static_plugin *)))) \
+        static struct spa_static_plugin spa_static_plugin = { \
+		SPA_STATIC_PLUGIN, \
+		spa_handle_factory_enum \
+	};
+
+#else
+#define SPA_REGISTER_PLUGIN()
+#endif
 
 #ifdef __cplusplus
 }  /* extern "C" */

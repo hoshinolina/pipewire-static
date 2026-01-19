@@ -124,6 +124,24 @@ static const struct pw_global_events global_events = {
 	.destroy = global_destroy,
 };
 
+static pw_impl_module_init_func_t find_builtin_module(const char *name) {
+	extern struct pw_static_module __start_pw_modules[];
+	extern struct pw_static_module __stop_pw_modules[];
+
+	struct pw_static_module *iter = __start_pw_modules;
+	struct pw_static_module *iter_end = __stop_pw_modules;
+
+	pw_log_info("Looking for built-in module:%s", name);
+
+	for ( ; iter < iter_end; ++iter) {
+		pw_log_info("%s", iter->name);
+		if (!strcmp(iter->name, name))
+			return iter->module_init;
+	}
+	return NULL;
+}
+
+
 /** Load a module
  *
  * \param context a \ref pw_context
@@ -141,7 +159,7 @@ pw_context_load_module(struct pw_context *context,
 {
 	struct pw_impl_module *this;
 	struct impl *impl;
-	void *hnd;
+	void *hnd = NULL;
 	char *filename = NULL;
 	const char *module_dir;
 	int res;
@@ -156,6 +174,14 @@ pw_context_load_module(struct pw_context *context,
 
 	pw_log_info("%p: name:%s args:%s", context, name, args);
 
+	init_func = find_builtin_module(name);
+	if (init_func)
+		goto initialize;
+
+#ifdef NO_DLOPEN
+	pw_log_debug("failed to load module %s: built-in modules only", name);
+	goto error_not_found;
+#endif
 	module_dir = getenv("PIPEWIRE_MODULE_DIR");
 	if (module_dir == NULL) {
 		module_dir = MODULEDIR;
@@ -190,6 +216,7 @@ pw_context_load_module(struct pw_context *context,
 	if ((init_func = dlsym(hnd, PIPEWIRE_SYMBOL_MODULE_INIT)) == NULL)
 		goto error_no_pw_module;
 
+initialize:
 	if (properties == NULL)
 		properties = pw_properties_new(NULL, NULL);
 	if (properties == NULL)

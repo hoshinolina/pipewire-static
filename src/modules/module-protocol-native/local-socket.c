@@ -25,8 +25,8 @@
 
 #define DEFAULT_SYSTEM_RUNTIME_DIR "/run/pipewire"
 
-PW_LOG_TOPIC_EXTERN(mod_topic);
-#define PW_LOG_TOPIC_DEFAULT mod_topic
+PW_LOG_TOPIC_EXTERN(mod_topic_native);
+#define PW_LOG_TOPIC_DEFAULT mod_topic_native
 
 static const char *
 get_remote(const struct spa_dict *props)

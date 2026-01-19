@@ -82,11 +82,13 @@ static pthread_mutex_t support_lock = PTHREAD_MUTEX_INITIALIZER;
 static struct support global_support;
 
 static struct plugin *
-find_plugin(struct registry *registry, const char *filename)
+find_plugin(struct registry *registry, const char *filename, const char *lib)
 {
 	struct plugin *p;
 	spa_list_for_each(p, &registry->plugins, link) {
 		if (spa_streq(p->filename, filename))
+			return p;
+		if (spa_streq(p->filename, lib))
 			return p;
 	}
 	return NULL;
@@ -105,10 +107,16 @@ open_plugin(struct registry *registry,
         if ((res = spa_scnprintf(filename, sizeof(filename), "%.*s/%s.so", (int)len, path, lib)) < 0)
 		goto error_out;
 
-	if ((plugin = find_plugin(registry, filename)) != NULL) {
+	if ((plugin = find_plugin(registry, filename, lib)) != NULL) {
 		plugin->ref++;
 		return plugin;
 	}
+
+#ifdef NO_DLOPEN
+	pw_log_debug("can't load %s: static plugins only", lib);
+	errno = -ENOENT;
+	return NULL;
+#endif
 
         if ((hnd = dlopen(filename, RTLD_NOW)) == NULL) {
 		res = -ENOENT;
@@ -144,6 +152,47 @@ error_dlclose:
 error_out:
 	errno = -res;
 	return NULL;
+}
+
+static struct plugin *
+add_builtin_plugin(struct registry *registry, struct spa_static_plugin *builtin)
+{
+	struct plugin *plugin;
+	int res;
+
+	if ((plugin = calloc(1, sizeof(struct plugin))) == NULL) {
+		res = -errno;
+		goto error_out;
+	}
+
+	pw_log_debug("loading built-in plugin %s", builtin->name);
+	plugin->ref = 1;
+	plugin->filename = strdup(builtin->name);
+	plugin->hnd = NULL;
+	plugin->enum_func = builtin->handle_factory_enum;
+	plugin->log_topic_enum = NULL;
+
+	spa_list_append(&registry->plugins, &plugin->link);
+
+	return plugin;
+
+error_out:
+	errno = -res;
+	return NULL;
+}
+
+static void add_builtin_plugins(void) {
+	struct registry *registry = &global_support.registry;
+
+	extern struct spa_static_plugin __start_spa_plugins[];
+	extern struct spa_static_plugin __stop_spa_plugins[];
+
+	struct spa_static_plugin *iter = __start_spa_plugins;
+	struct spa_static_plugin *iter_end = __stop_spa_plugins;
+
+	for ( ; iter < iter_end; ++iter) {
+		add_builtin_plugin(registry, iter);
+	}
 }
 
 static void
@@ -573,6 +622,8 @@ void pw_init(int *argc, char **argv[])
 	if ((str = getenv("PIPEWIRE_VM")))
 		items[n_items++] = SPA_DICT_ITEM_INIT(SPA_KEY_CPU_VM_TYPE, str);
 	info = SPA_DICT_INIT(items, n_items);
+
+	add_builtin_plugins();
 
 	add_interface(support, SPA_NAME_SUPPORT_CPU, SPA_TYPE_INTERFACE_CPU, &info);
 

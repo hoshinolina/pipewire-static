@@ -9,6 +9,9 @@ project('pipewire', ['c' ],
                       #'b_sanitize=address,undefined',
                       'buildtype=debugoptimized' ])
 
+static = get_option('static')
+static_plugins = []
+
 pipewire_version = meson.project_version()
 version_arr = pipewire_version.split('.')
 pipewire_version_major = version_arr[0]
@@ -49,7 +52,7 @@ pipewire_localedir = prefix / get_option('localedir')
 pipewire_sysconfdir = prefix / get_option('sysconfdir')
 
 pipewire_configdir = pipewire_sysconfdir / 'pipewire'
-pipewire_confdatadir = pipewire_datadir / 'pipewire'
+pipewire_confdatadir = '/usr/share/pipewire/'
 modules_install_dir = pipewire_libdir / pipewire_name
 
 cc = meson.get_compiler('c')

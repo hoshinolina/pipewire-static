@@ -53,8 +53,8 @@
 
 
 #define NAME "protocol-native"
-PW_LOG_TOPIC(mod_topic, "mod." NAME);
-#define PW_LOG_TOPIC_DEFAULT mod_topic
+PW_LOG_TOPIC(mod_topic_native, "mod." NAME);
+#define PW_LOG_TOPIC_DEFAULT mod_topic_native
 PW_LOG_TOPIC(mod_topic_connection, "conn." NAME);
 
 #undef spa_debug
@@ -1804,7 +1804,7 @@ int pipewire__module_init(struct pw_impl_module *module, const char *args_str)
 		NULL
 	};
 
-	PW_LOG_TOPIC_INIT(mod_topic);
+	PW_LOG_TOPIC_INIT(mod_topic_native);
 	PW_LOG_TOPIC_INIT(mod_topic_connection);
 
 	if (pw_context_find_protocol(context, PW_TYPE_INFO_PROTOCOL_Native) != NULL) {
@@ -1866,3 +1866,5 @@ error_cleanup:
 	pw_protocol_destroy(this);
 	return res;
 }
+
+PW_REGISTER_MODULE()

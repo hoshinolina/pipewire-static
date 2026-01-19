@@ -20,8 +20,8 @@
 #define MAX_METAS	16u
 #define MAX_DATAS	256u
 
-PW_LOG_TOPIC_EXTERN(mod_topic);
-#define PW_LOG_TOPIC_DEFAULT mod_topic
+PW_LOG_TOPIC_EXTERN(mod_topic_node);
+#define PW_LOG_TOPIC_DEFAULT mod_topic_node
 
 static inline void push_item(struct spa_pod_builder *b, const struct spa_dict_item *item)
 {

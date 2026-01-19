@@ -30,8 +30,8 @@
 
 #define NAME "adapter"
 
-PW_LOG_TOPIC_EXTERN(mod_topic);
-#define PW_LOG_TOPIC_DEFAULT mod_topic
+PW_LOG_TOPIC_EXTERN(mod_topic_adapter);
+#define PW_LOG_TOPIC_DEFAULT mod_topic_adapter
 
 struct buffer {
 	struct spa_buffer buf;

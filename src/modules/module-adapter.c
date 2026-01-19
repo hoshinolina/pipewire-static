@@ -26,8 +26,8 @@
  */
 #define NAME "adapter"
 
-PW_LOG_TOPIC(mod_topic, "mod." NAME);
-#define PW_LOG_TOPIC_DEFAULT mod_topic
+PW_LOG_TOPIC(mod_topic_adapter, "mod." NAME);
+#define PW_LOG_TOPIC_DEFAULT mod_topic_adapter
 
 #define FACTORY_USAGE	SPA_KEY_FACTORY_NAME"=<factory-name> " \
 			"("SPA_KEY_LIBRARY_NAME"=<library-name>) " \
@@ -365,7 +365,7 @@ int pipewire__module_init(struct pw_impl_module *module, const char *args)
 	struct pw_impl_factory *factory;
 	struct factory_data *data;
 
-	PW_LOG_TOPIC_INIT(mod_topic);
+	PW_LOG_TOPIC_INIT(mod_topic_adapter);
 
 	factory = pw_context_create_factory(context,
 				 "adapter",
@@ -398,3 +398,5 @@ int pipewire__module_init(struct pw_impl_module *module, const char *args)
 
 	return 0;
 }
+
+PW_REGISTER_MODULE()

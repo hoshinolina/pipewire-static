@@ -15,8 +15,8 @@
 #include "protocol-footer.h"
 #include "defs.h"
 
-PW_LOG_TOPIC_EXTERN(mod_topic);
-#define PW_LOG_TOPIC_DEFAULT mod_topic
+PW_LOG_TOPIC_EXTERN(mod_topic_native);
+#define PW_LOG_TOPIC_DEFAULT mod_topic_native
 
 struct footer_builder {
 	struct spa_pod_builder *builder;

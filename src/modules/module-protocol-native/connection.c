@@ -16,8 +16,8 @@
 
 #include <pipewire/pipewire.h>
 
-PW_LOG_TOPIC_EXTERN(mod_topic);
-#define PW_LOG_TOPIC_DEFAULT mod_topic
+PW_LOG_TOPIC_EXTERN(mod_topic_native);
+#define PW_LOG_TOPIC_DEFAULT mod_topic_native
 PW_LOG_TOPIC_EXTERN(mod_topic_connection);
 
 #undef spa_debug

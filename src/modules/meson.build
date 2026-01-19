@@ -57,7 +57,7 @@ if flatpak_support
   pipewire_module_access_deps += glib2_dep
 endif
 
-pipewire_module_access = shared_library('pipewire-module-access', [ 'module-access.c' ],
+pipewire_module_access = library('pipewire-module-access', [ 'module-access.c' ],
   include_directories : [configinc],
   install : true,
   install_dir : modules_install_dir,
@@ -65,7 +65,7 @@ pipewire_module_access = shared_library('pipewire-module-access', [ 'module-acce
   dependencies : pipewire_module_access_deps
 )
 
-pipewire_module_loopback = shared_library('pipewire-module-loopback',
+pipewire_module_loopback = library('pipewire-module-loopback',
   [ 'module-loopback.c' ],
   include_directories : [configinc],
   install : true,
@@ -74,7 +74,7 @@ pipewire_module_loopback = shared_library('pipewire-module-loopback',
   dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
 )
 
-pipewire_module_filter_chain = shared_library('pipewire-module-filter-chain',
+pipewire_module_filter_chain = library('pipewire-module-filter-chain',
   [ 'module-filter-chain.c' ],
   include_directories : [configinc],
   install : true,
@@ -83,7 +83,7 @@ pipewire_module_filter_chain = shared_library('pipewire-module-filter-chain',
   dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
 )
 
-pipewire_module_combine_stream = shared_library('pipewire-module-combine-stream',
+pipewire_module_combine_stream = library('pipewire-module-combine-stream',
   [ 'module-combine-stream.c' ],
   include_directories : [configinc],
   install : true,
@@ -92,18 +92,18 @@ pipewire_module_combine_stream = shared_library('pipewire-module-combine-stream'
   dependencies : [spa_dep, dl_lib, pipewire_dep],
 )
 
-pipewire_module_echo_cancel = shared_library('pipewire-module-echo-cancel',
+pipewire_module_echo_cancel = library('pipewire-module-echo-cancel',
   [ 'module-echo-cancel.c' ],
   include_directories : [configinc],
   install : true,
   install_dir : modules_install_dir,
   install_rpath: modules_install_dir,
-  dependencies : [mathlib, dl_lib, pipewire_dep, plugin_dependencies],
+  dependencies : [mathlib, dl_lib, pipewire_dep, audioconvert_dep],
 )
 
 build_module_jack_tunnel = jack_dep.found()
 if build_module_jack_tunnel
-  pipewire_module_jack_tunnel = shared_library('pipewire-module-jack-tunnel',
+  pipewire_module_jack_tunnel = library('pipewire-module-jack-tunnel',
     [ 'module-jack-tunnel.c' ],
     include_directories : [configinc],
     install : true,
@@ -113,7 +113,7 @@ if build_module_jack_tunnel
   )
   build_module_jackdbus_detect = dbus_dep.found()
   if build_module_jackdbus_detect
-    pipewire_module_jack_tunnel = shared_library('pipewire-module-jackdbus-detect',
+    pipewire_module_jack_tunnel = library('pipewire-module-jackdbus-detect',
       [ 'module-jackdbus-detect.c' ],
       include_directories : [configinc],
       install : true,
@@ -128,7 +128,7 @@ summary({'jack-tunnel': build_module_jack_tunnel}, bool_yn: true, section: 'Opti
 
 build_module_ffado_driver = libffado_dep.found()
 if build_module_ffado_driver
-  pipewire_module_jack_tunnel = shared_library('pipewire-module-ffado-driver',
+  pipewire_module_jack_tunnel = library('pipewire-module-ffado-driver',
     [ 'module-ffado-driver.c' ],
     include_directories : [configinc],
     install : true,
@@ -151,7 +151,7 @@ else
 endif
 summary({'Opus with custom modes for NetJack2': opus_custom_dep}, bool_yn: true, section: 'Streaming between daemons')
 
-pipewire_module_netjack2_driver = shared_library('pipewire-module-netjack2-driver',
+pipewire_module_netjack2_driver = library('pipewire-module-netjack2-driver',
   [ 'module-netjack2-driver.c' ],
   include_directories : [configinc],
   install : true,
@@ -160,7 +160,7 @@ pipewire_module_netjack2_driver = shared_library('pipewire-module-netjack2-drive
   dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep, opus_custom_dep],
 )
 
-pipewire_module_netjack2_manager = shared_library('pipewire-module-netjack2-manager',
+pipewire_module_netjack2_manager = library('pipewire-module-netjack2-manager',
   [ 'module-netjack2-manager.c' ],
   include_directories : [configinc],
   install : true,
@@ -169,7 +169,7 @@ pipewire_module_netjack2_manager = shared_library('pipewire-module-netjack2-mana
   dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep, opus_custom_dep],
 )
 
-pipewire_module_parametric_equalizer = shared_library('pipewire-module-parametric-equalizer',
+pipewire_module_parametric_equalizer = library('pipewire-module-parametric-equalizer',
   [ 'module-parametric-equalizer.c' ],
   include_directories : [configinc],
   install : true,
@@ -178,7 +178,7 @@ pipewire_module_parametric_equalizer = shared_library('pipewire-module-parametri
   dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
 )
 
-pipewire_module_profiler = shared_library('pipewire-module-profiler',
+pipewire_module_profiler = library('pipewire-module-profiler',
   [ 'module-profiler.c',
     'module-profiler/protocol-native.c', ],
   include_directories : [configinc],
@@ -188,7 +188,7 @@ pipewire_module_profiler = shared_library('pipewire-module-profiler',
   dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
 )
 
-pipewire_module_rt = shared_library('pipewire-module-rt', [ 'module-rt.c' ],
+pipewire_module_rt = library('pipewire-module-rt', [ 'module-rt.c' ],
   include_directories : [configinc],
   install : true,
   install_dir : modules_install_dir,
@@ -198,7 +198,7 @@ pipewire_module_rt = shared_library('pipewire-module-rt', [ 'module-rt.c' ],
 
 build_module_rtkit = dbus_dep.found() and (get_option('legacy-rtkit') == true)
 if build_module_rtkit
-  pipewire_module_rtkit = shared_library('pipewire-module-rtkit', [ 'module-rt.c' ],
+  pipewire_module_rtkit = library('pipewire-module-rtkit', [ 'module-rt.c' ],
     include_directories : [configinc],
     install : true,
     install_dir : modules_install_dir,
@@ -208,42 +208,70 @@ if build_module_rtkit
 endif
 summary({'rt': '@0@ RTKit'.format(build_module_rtkit ? 'with' : 'without')}, section: 'Optional Modules')
 
-pipewire_module_spa_node = shared_library('pipewire-module-spa-node',
-  [ 'module-spa-node.c', 'spa/spa-node.c' ],
+spa_node = static_library('spa_node',
+  [ 'spa/spa-node.c' ],
   include_directories : [configinc],
-  install : true,
-  install_dir : modules_install_dir,
-  install_rpath: modules_install_dir,
   dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
 )
-pipewire_module_spa_node_factory = shared_library('pipewire-module-spa-node-factory',
-  [ 'module-spa-node-factory.c', 'spa/spa-node.c' ],
+
+if static
+  spa_node_dep = declare_dependency()
+else
+  spa_node_dep = declare_dependency(link_with: spa_node)
+endif
+
+spa_device = static_library('spa_device',
+  [ 'spa/spa-device.c' ],
   include_directories : [configinc],
-  install : true,
-  install_dir : modules_install_dir,
-  install_rpath: modules_install_dir,
   dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
 )
-pipewire_module_spa_device = shared_library('pipewire-module-spa-device',
-  [ 'module-spa-device.c', 'spa/spa-device.c' ],
+
+if static
+  spa_device_dep = declare_dependency()
+else
+  spa_device_dep = declare_dependency(link_with: spa_device)
+endif
+
+pipewire_module_spa_node = library('pipewire-module-spa-node',
+  [ 'module-spa-node.c' ],
+  c_static_args: [ '-DPW_STATIC_MODULE="libpipewire-module-spa-node"' ],
   include_directories : [configinc],
   install : true,
   install_dir : modules_install_dir,
   install_rpath: modules_install_dir,
-  dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
+  link_with: [spa_node],
+  dependencies : [spa_dep, spa_node_dep, mathlib, dl_lib, pipewire_dep],
 )
-pipewire_module_spa_device_factory = shared_library('pipewire-module-spa-device-factory',
-  [ 'module-spa-device-factory.c', 'spa/spa-device.c' ],
+pipewire_module_spa_node_factory = library('pipewire-module-spa-node-factory',
+  [ 'module-spa-node-factory.c' ],
   include_directories : [configinc],
   install : true,
   install_dir : modules_install_dir,
   install_rpath: modules_install_dir,
-  dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
+  dependencies : [spa_dep, spa_node_dep, mathlib, dl_lib, pipewire_dep],
+)
+pipewire_module_spa_device = library('pipewire-module-spa-device',
+  [ 'module-spa-device.c' ],
+  c_static_args: [ '-DPW_STATIC_MODULE="libpipewire-module-spa-device"' ],
+  include_directories : [configinc],
+  install : true,
+  install_dir : modules_install_dir,
+  install_rpath: modules_install_dir,
+  link_with: [spa_device],
+  dependencies : [spa_dep, spa_device_dep, mathlib, dl_lib, pipewire_dep],
+)
+pipewire_module_spa_device_factory = library('pipewire-module-spa-device-factory',
+  [ 'module-spa-device-factory.c' ],
+  include_directories : [configinc],
+  install : true,
+  install_dir : modules_install_dir,
+  install_rpath: modules_install_dir,
+  dependencies : [spa_dep, spa_device_dep, mathlib, dl_lib, pipewire_dep],
 )
 
 build_module_portal = dbus_dep.found()
 if build_module_portal
-  pipewire_module_portal = shared_library('pipewire-module-portal', [ 'module-portal.c' ],
+  pipewire_module_portal = library('pipewire-module-portal', [ 'module-portal.c' ],
     include_directories : [configinc],
     install : true,
     install_dir : modules_install_dir,
@@ -253,11 +281,12 @@ if build_module_portal
 endif
 summary({'portal': build_module_portal}, bool_yn: true, section: 'Optional Modules')
 
-pipewire_module_client_device = shared_library('pipewire-module-client-device',
+pipewire_module_client_device = library('pipewire-module-client-device',
   [ 'module-client-device.c',
     'module-client-device/resource-device.c',
     'module-client-device/proxy-device.c',
     'module-client-device/protocol-native.c', ],
+  c_static_args: [ '-DPW_STATIC_MODULE="libpipewire-module-client-device"' ],
   include_directories : [configinc],
   install : true,
   install_dir : modules_install_dir,
@@ -265,7 +294,7 @@ pipewire_module_client_device = shared_library('pipewire-module-client-device',
   dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
 )
 
-pipewire_module_link_factory = shared_library('pipewire-module-link-factory',
+pipewire_module_link_factory = library('pipewire-module-link-factory',
   [ 'module-link-factory.c' ],
   include_directories : [configinc],
   install : true,
@@ -284,7 +313,7 @@ if selinux_dep.found()
   pipewire_module_protocol_deps += selinux_dep
 endif
 
-pipewire_module_protocol_native = shared_library('pipewire-module-protocol-native',
+pipewire_module_protocol_native = library('pipewire-module-protocol-native',
   [ 'module-protocol-native.c',
     'module-protocol-native/local-socket.c',
     'module-protocol-native/portal-screencast.c',
@@ -292,12 +321,15 @@ pipewire_module_protocol_native = shared_library('pipewire-module-protocol-nativ
     'module-protocol-native/protocol-footer.c',
     'module-protocol-native/security-context.c',
     'module-protocol-native/connection.c' ],
+  c_static_args: [ '-DPW_STATIC_MODULE="libpipewire-module-protocol-native"' ],
   include_directories : [configinc],
   install : true,
   install_dir : modules_install_dir,
   install_rpath: modules_install_dir,
   dependencies : pipewire_module_protocol_deps,
 )
+
+pipewire_module_protocol_native_dep = declare_dependency(link_with: [pipewire_module_protocol_native])
 
 pipewire_module_protocol_pulse_deps = pipewire_module_protocol_deps
 
@@ -402,7 +434,7 @@ if flatpak_support
   pipewire_module_protocol_pulse_deps += glib2_dep
 endif
 
-pipewire_module_protocol_pulse = shared_library('pipewire-module-protocol-pulse',
+pipewire_module_protocol_pulse = library('pipewire-module-protocol-pulse',
   pipewire_module_protocol_pulse_sources,
   include_directories : [configinc],
   install : true,
@@ -413,7 +445,7 @@ pipewire_module_protocol_pulse = shared_library('pipewire-module-protocol-pulse'
 
 build_module_pulse_tunnel = pulseaudio_dep.found()
   if build_module_pulse_tunnel
-    pipewire_module_pulse_tunnel = shared_library('pipewire-module-pulse-tunnel',
+    pipewire_module_pulse_tunnel = library('pipewire-module-pulse-tunnel',
     [ 'module-pulse-tunnel.c',
       'module-protocol-pulse/format.c' ],
     include_directories : [configinc],
@@ -425,7 +457,7 @@ build_module_pulse_tunnel = pulseaudio_dep.found()
 endif
 summary({'pulse-tunnel': build_module_pulse_tunnel}, bool_yn: true, section: 'Optional Modules')
 
-pipewire_module_pipe_tunnel = shared_library('pipewire-module-pipe-tunnel',
+pipewire_module_pipe_tunnel = library('pipewire-module-pipe-tunnel',
   [ 'module-pipe-tunnel.c' ],
   include_directories : [configinc],
   install : true,
@@ -434,7 +466,7 @@ pipewire_module_pipe_tunnel = shared_library('pipewire-module-pipe-tunnel',
   dependencies : [mathlib, dl_lib, pipewire_dep],
 )
 
-pipewire_module_protocol_simple = shared_library('pipewire-module-protocol-simple',
+pipewire_module_protocol_simple = library('pipewire-module-protocol-simple',
   [ 'module-protocol-simple.c' ],
   include_directories : [configinc],
   install : true,
@@ -443,7 +475,7 @@ pipewire_module_protocol_simple = shared_library('pipewire-module-protocol-simpl
   dependencies : pipewire_module_protocol_deps,
 )
 
-pipewire_module_example_filter = shared_library('pipewire-module-example-filter',
+pipewire_module_example_filter = library('pipewire-module-example-filter',
   [ 'module-example-filter.c' ],
   include_directories : [configinc],
   install : false,
@@ -452,7 +484,7 @@ pipewire_module_example_filter = shared_library('pipewire-module-example-filter'
   dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
 )
 
-pipewire_module_example_sink = shared_library('pipewire-module-example-sink',
+pipewire_module_example_sink = library('pipewire-module-example-sink',
   [ 'module-example-sink.c' ],
   include_directories : [configinc],
   install : false,
@@ -461,7 +493,7 @@ pipewire_module_example_sink = shared_library('pipewire-module-example-sink',
   dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
 )
 
-pipewire_module_example_sink = shared_library('pipewire-module-example-source',
+pipewire_module_example_sink = library('pipewire-module-example-source',
   [ 'module-example-source.c' ],
   include_directories : [configinc],
   install : false,
@@ -470,33 +502,34 @@ pipewire_module_example_sink = shared_library('pipewire-module-example-source',
   dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
 )
 
-pipewire_module_client_node = shared_library('pipewire-module-client-node',
+pipewire_module_client_node = library('pipewire-module-client-node',
   [ 'module-client-node.c',
     'module-client-node/remote-node.c',
     'module-client-node/client-node.c',
     'module-client-node/protocol-native.c',
-    'spa/spa-node.c', ],
+  ],
+  c_static_args: [ '-DPW_STATIC_MODULE="libpipewire-module-client-node"' ],
   include_directories : [configinc],
-  link_with : pipewire_module_protocol_native,
   install : true,
   install_dir : modules_install_dir,
   install_rpath: modules_install_dir,
-  dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
+  dependencies : [spa_dep, spa_node_dep, mathlib, dl_lib, pipewire_dep, pipewire_module_protocol_native_dep],
 )
 
-pipewire_module_metadata = shared_library('pipewire-module-metadata',
+pipewire_module_metadata = library('pipewire-module-metadata',
   [ 'module-metadata.c',
     'module-metadata/proxy-metadata.c',
     'module-metadata/metadata.c',
     'module-metadata/protocol-native.c'],
+  c_static_args: [ '-DPW_STATIC_MODULE="libpipewire-module-metadata"' ],
   include_directories : [configinc],
-  link_with : pipewire_module_protocol_native,
   install : true,
   install_dir : modules_install_dir,
   install_rpath: modules_install_dir,
-  dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep],
+  dependencies : [spa_dep, mathlib, dl_lib, pipewire_dep, pipewire_module_protocol_native_dep],
 )
 
+if not static
 test('pw-test-protocol-native',
   executable('pw-test-protocol-native',
     [ 'module-protocol-native/test-connection.c',
@@ -524,19 +557,21 @@ if installed_tests_enabled
     configuration: test_conf
   )
 endif
+endif
 
-pipewire_module_adapter = shared_library('pipewire-module-adapter',
+pipewire_module_adapter = library('pipewire-module-adapter',
   [ 'module-adapter.c',
     'module-adapter/adapter.c',
-    'spa/spa-node.c' ],
+  ],
+  c_static_args: [ '-DPW_STATIC_MODULE="libpipewire-module-adapter"' ],
   include_directories : [configinc],
   install : true,
   install_dir : modules_install_dir,
   install_rpath: modules_install_dir,
-  dependencies : [mathlib, dl_lib, rt_lib, pipewire_dep],
+  dependencies : [mathlib, dl_lib, rt_lib, pipewire_dep, spa_node_dep],
 )
 
-pipewire_module_session_manager = shared_library('pipewire-module-session-manager',
+pipewire_module_session_manager = library('pipewire-module-session-manager',
   [ 'module-session-manager.c',
     'module-session-manager/client-endpoint/client-endpoint.c',
     'module-session-manager/client-endpoint/endpoint-stream.c',
@@ -551,6 +586,7 @@ pipewire_module_session_manager = shared_library('pipewire-module-session-manage
     'module-session-manager/proxy-session-manager.c',
     'module-session-manager/session.c',
   ],
+  c_static_args: [ '-DPW_STATIC_MODULE="libpipewire-module-session-manager"' ],
   include_directories : [configinc],
   install : true,
   install_dir : modules_install_dir,
@@ -560,7 +596,7 @@ pipewire_module_session_manager = shared_library('pipewire-module-session-manage
 
 build_module_zeroconf_discover = avahi_dep.found()
 if build_module_zeroconf_discover
-  pipewire_module_zeroconf_discover = shared_library('pipewire-module-zeroconf-discover',
+  pipewire_module_zeroconf_discover = library('pipewire-module-zeroconf-discover',
     [ 'module-zeroconf-discover.c',
       'module-protocol-pulse/format.c',
       'module-zeroconf-discover/avahi-poll.c' ],
@@ -575,7 +611,7 @@ summary({'zeroconf-discover': build_module_zeroconf_discover}, bool_yn: true, se
 
 build_module_raop_discover = avahi_dep.found()
 if build_module_raop_discover
-  pipewire_module_raop_discover = shared_library('pipewire-module-raop-discover',
+  pipewire_module_raop_discover = library('pipewire-module-raop-discover',
     [ 'module-raop-discover.c',
       'module-zeroconf-discover/avahi-poll.c' ],
     include_directories : [configinc],
@@ -589,7 +625,7 @@ summary({'raop-discover (needs Avahi)': build_module_raop_discover}, bool_yn: tr
 
 build_module_snapcast_discover = avahi_dep.found()
 if build_module_snapcast_discover
-  pipewire_module_snapcast_discover = shared_library('pipewire-module-snapcast-discover',
+  pipewire_module_snapcast_discover = library('pipewire-module-snapcast-discover',
     [ 'module-snapcast-discover.c',
       'module-zeroconf-discover/avahi-poll.c' ],
     include_directories : [configinc],
@@ -603,7 +639,7 @@ summary({'snapcast-discover (needs Avahi)': build_module_snapcast_discover}, boo
 
 build_module_raop = openssl_lib.found()
 if build_module_raop
-  pipewire_module_raop_sink = shared_library('pipewire-module-raop-sink',
+  pipewire_module_raop_sink = library('pipewire-module-raop-sink',
     [ 'module-raop-sink.c',
       'module-raop/rtsp-client.c',
       'module-rtp/stream.c' ],
@@ -619,7 +655,7 @@ summary({'raop-sink (requires OpenSSL)': build_module_raop}, bool_yn: true, sect
 roc_dep = dependency('roc', version: '>= 0.4.0', required: get_option('roc'))
 summary({'ROC': roc_dep.found()}, bool_yn: true, section: 'Streaming between daemons')
 
-pipewire_module_rtp_source = shared_library('pipewire-module-rtp-source',
+pipewire_module_rtp_source = library('pipewire-module-rtp-source',
   [ 'module-rtp-source.c',
     'module-rtp/stream.c' ],
   include_directories : [configinc],
@@ -629,7 +665,7 @@ pipewire_module_rtp_source = shared_library('pipewire-module-rtp-source',
   dependencies : [mathlib, dl_lib, rt_lib, pipewire_dep, opus_dep],
 )
 
-pipewire_module_rtp_sink = shared_library('pipewire-module-rtp-sink',
+pipewire_module_rtp_sink = library('pipewire-module-rtp-sink',
   [ 'module-rtp-sink.c',
     'module-rtp/stream.c' ],
   include_directories : [configinc],
@@ -641,7 +677,7 @@ pipewire_module_rtp_sink = shared_library('pipewire-module-rtp-sink',
 
 build_module_rtp_session = avahi_dep.found()
 if build_module_rtp_session
-  pipewire_module_rtp_session = shared_library('pipewire-module-rtp-session',
+  pipewire_module_rtp_session = library('pipewire-module-rtp-session',
     [ 'module-rtp/stream.c',
       'module-zeroconf-discover/avahi-poll.c',
      'module-rtp-session.c' ],
@@ -653,7 +689,7 @@ if build_module_rtp_session
   )
 endif
 
-pipewire_module_rtp_sap = shared_library('pipewire-module-rtp-sap',
+pipewire_module_rtp_sap = library('pipewire-module-rtp-sap',
   [ 'module-rtp-sap.c' ],
   include_directories : [configinc],
   install : true,
@@ -662,7 +698,7 @@ pipewire_module_rtp_sap = shared_library('pipewire-module-rtp-sap',
   dependencies : [mathlib, dl_lib, rt_lib, pipewire_dep],
 )
 
-pipewire_module_vban_send = shared_library('pipewire-module-vban-send',
+pipewire_module_vban_send = library('pipewire-module-vban-send',
   [ 'module-vban-send.c',
     'module-vban/stream.c' ],
   include_directories : [configinc],
@@ -672,7 +708,7 @@ pipewire_module_vban_send = shared_library('pipewire-module-vban-send',
   dependencies : [mathlib, dl_lib, rt_lib, pipewire_dep],
 )
 
-pipewire_module_vban_recv = shared_library('pipewire-module-vban-recv',
+pipewire_module_vban_recv = library('pipewire-module-vban-recv',
   [ 'module-vban-recv.c',
     'module-vban/stream.c' ],
   include_directories : [configinc],
@@ -684,7 +720,7 @@ pipewire_module_vban_recv = shared_library('pipewire-module-vban-recv',
 
 build_module_roc = roc_dep.found()
 if build_module_roc
-  pipewire_module_roc_sink = shared_library('pipewire-module-roc-sink',
+  pipewire_module_roc_sink = library('pipewire-module-roc-sink',
     [ 'module-roc-sink.c' ],
     include_directories : [configinc],
     install : true,
@@ -693,7 +729,7 @@ if build_module_roc
     dependencies : [mathlib, dl_lib, rt_lib, pipewire_dep, roc_dep],
   )
 
-  pipewire_module_roc_source = shared_library('pipewire-module-roc-source',
+  pipewire_module_roc_source = library('pipewire-module-roc-source',
     [ 'module-roc-source.c' ],
     include_directories : [configinc],
     install : true,
@@ -707,7 +743,7 @@ summary({'roc-source': build_module_roc}, bool_yn: true, section: 'Optional Modu
 
 build_module_x11_bell = x11_dep.found() and canberra_dep.found()
 if build_module_x11_bell
-  pipewire_module_x11_bell = shared_library('pipewire-module-x11-bell',
+  pipewire_module_x11_bell = library('pipewire-module-x11-bell',
     [ 'module-x11-bell.c' ],
     include_directories : [configinc],
     install : true,
@@ -718,7 +754,7 @@ if build_module_x11_bell
 endif
 summary({'x11-bell': build_module_x11_bell}, bool_yn: true, section: 'Optional Modules')
 
-pipewire_module_fallback_sink = shared_library('pipewire-module-fallback-sink',
+pipewire_module_fallback_sink = library('pipewire-module-fallback-sink',
   [ 'module-fallback-sink.c' ],
   include_directories : [configinc],
   install : true,
@@ -729,7 +765,7 @@ pipewire_module_fallback_sink = shared_library('pipewire-module-fallback-sink',
 
 build_module_avb = get_option('avb').require(host_machine.system() == 'linux', error_message: 'AVB support is only available on Linux').allowed()
 if build_module_avb
-  pipewire_module_avb = shared_library('pipewire-module-avb',
+  pipewire_module_avb = library('pipewire-module-avb',
     [ 'module-avb.c',
       'module-avb/avb.c',
       'module-avb/adp.c',
@@ -769,3 +805,16 @@ if build_module_avb
   )
 endif
 summary({'avb': build_module_avb}, bool_yn: true, section: 'Optional Modules')
+
+if static
+  static_plugins += [
+    pipewire_module_client_node,
+    pipewire_module_client_device,
+    pipewire_module_protocol_native,
+    pipewire_module_adapter,
+    pipewire_module_spa_node,
+    pipewire_module_spa_device,
+    pipewire_module_metadata,
+    pipewire_module_session_manager,
+  ]
+endif

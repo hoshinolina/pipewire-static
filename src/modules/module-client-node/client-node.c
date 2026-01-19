@@ -23,8 +23,8 @@
 #include "modules/spa/spa-node.h"
 #include "client-node.h"
 
-PW_LOG_TOPIC_EXTERN(mod_topic);
-#define PW_LOG_TOPIC_DEFAULT mod_topic
+PW_LOG_TOPIC_EXTERN(mod_topic_node);
+#define PW_LOG_TOPIC_DEFAULT mod_topic_node
 
 /** \cond */
 

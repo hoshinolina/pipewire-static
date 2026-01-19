@@ -24,8 +24,8 @@
 
 #define MAX_BUFFERS	64
 
-PW_LOG_TOPIC_EXTERN(mod_topic);
-#define PW_LOG_TOPIC_DEFAULT mod_topic
+PW_LOG_TOPIC_EXTERN(mod_topic_node);
+#define PW_LOG_TOPIC_DEFAULT mod_topic_node
 
 /** \cond */
 static bool mlock_warned = false;

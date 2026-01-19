@@ -56,3 +56,5 @@ int pipewire__module_init(struct pw_impl_module *module, const char *args)
 
 	return 0;
 }
+
+PW_REGISTER_MODULE()

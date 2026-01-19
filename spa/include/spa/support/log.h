@@ -324,13 +324,16 @@ SPA_API_LOG void spa_log_logtv(struct spa_log *l, enum spa_log_level level,
  *
  * \since 1.1.0
  */
+#ifdef SPA_STATIC_PLUGIN
+#define SPA_LOG_TOPIC_ENUM_DEFINE(s, e)
+#else
 #define SPA_LOG_TOPIC_ENUM_DEFINE(s, e) \
 	SPA_EXPORT struct spa_log_topic_enum spa_log_topic_enum = (struct spa_log_topic_enum) { \
 		.version = SPA_VERSION_LOG_TOPIC_ENUM, \
 		.topics = (s), \
 		.topics_end = (e), \
 	}
-
+#endif
 /**
  * Magically register a statically defined \ref spa_log_topic into
  * the log topic enumeration for a plugin.

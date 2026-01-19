@@ -77,8 +77,8 @@
 
 #define NAME "client-device"
 
-PW_LOG_TOPIC_STATIC(mod_topic, "mod." NAME);
-#define PW_LOG_TOPIC_DEFAULT mod_topic
+PW_LOG_TOPIC_STATIC(mod_topic_node, "mod." NAME);
+#define PW_LOG_TOPIC_DEFAULT mod_topic_node
 
 static const struct spa_dict_item module_props[] = {
 	{ PW_KEY_MODULE_AUTHOR, "Wim Taymans <wim.taymans@gmail.com>" },
@@ -228,7 +228,7 @@ int pipewire__module_init(struct pw_impl_module *module, const char *args)
 	struct factory_data *data;
 	int res;
 
-	PW_LOG_TOPIC_INIT(mod_topic);
+	PW_LOG_TOPIC_INIT(mod_topic_node);
 	factory = pw_context_create_factory(context,
 				 "client-device",
 				 SPA_TYPE_INTERFACE_Device,
@@ -267,3 +267,5 @@ error:
 	pw_impl_factory_destroy(data->factory);
 	return res;
 }
+
+PW_REGISTER_MODULE()
